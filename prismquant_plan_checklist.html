@@ -136,7 +136,7 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
 
-    <div class="w-full max-w-4xl">
+    <div class="w-full max-w-5xl">
         
         <!-- Header Section -->
         <header class="mb-12 text-center mt-8">
@@ -156,9 +156,8 @@
 
         <!-- Hero Image Section -->
         <div class="glass-panel rounded-2xl mb-10 overflow-hidden">
-            <div class="relative bg-gradient-to-br from-purple-900/60 via-slate-900/80 to-cyan-900/60">
-                <img src="PrismQ.png" alt="PrismQuant visual" class="w-full h-full object-contain mix-blend-screen opacity-90">
-                <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_10%_0%,rgba(255,0,127,0.25),transparent_55%),radial-gradient(circle_at_90%_100%,rgba(0,212,255,0.25),transparent_55%)]"></div>
+            <div class="bg-black flex items-center justify-center p-4 md:p-6">
+                <img src="PrismQ.png" alt="PrismQuant visual" class="w-full max-w-md md:max-w-lg object-contain">
             </div>
         </div>
 
@@ -184,7 +183,7 @@
         </div>
 
         <!-- Checklist Container -->
-        <main id="checklist-container" class="space-y-6 pb-20">
+        <main id="checklist-container" class="pb-20 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             <!-- JavaScript will populate this -->
         </main>
 
@@ -308,28 +307,48 @@
 
             checklistData.forEach((phase) => {
                 const phaseEl = document.createElement('div');
-                phaseEl.className = 'glass-panel rounded-2xl overflow-hidden';
+                phaseEl.className = 'glass-panel rounded-2xl overflow-hidden flex flex-col';
                 
                 // Phase Header
                 const header = document.createElement('div');
-                header.className = 'p-5 border-b border-gray-800/50 bg-[#0f0f11]/80 flex items-center gap-3';
+                header.className = 'px-4 py-3 border-b border-gray-800/60 bg-[#0f0f11]/90 flex items-center gap-3';
                 header.innerHTML = `
-                    <div class="p-2 rounded-lg bg-gray-800/50 text-gray-300">
-                        <i data-lucide="${phase.icon}" class="w-5 h-5"></i>
+                    <div class="p-1.5 rounded-lg bg-gray-800/60 text-gray-300 shadow-inner">
+                        <i data-lucide="${phase.icon}" class="w-4 h-4"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-200 tracking-wide">${phase.title}</h3>
+                    <div class="flex flex-col items-start gap-0.5">
+                        <span class="text-[11px] uppercase tracking-[0.25em] text-gray-500">Phase</span>
+                        <h3 class="text-sm font-semibold text-gray-100 tracking-wide leading-snug">${phase.title}</h3>
+                    </div>
                 `;
                 phaseEl.appendChild(header);
 
+                // Phase Meta Bar
+                const metaBar = document.createElement('div');
+                metaBar.className = 'px-4 py-2 flex items-center justify-between text-[11px] text-gray-500 bg-gradient-to-r from-gray-950/80 via-gray-900/70 to-gray-950/80 border-b border-gray-800/60';
+                metaBar.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-900/80 border border-gray-700/70 text-[10px] font-semibold text-gray-200">
+                            ${phase.tasks.length}
+                        </span>
+                        <span class="uppercase tracking-[0.18em] text-gray-400">Tasks</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="px-2 py-0.5 rounded-full bg-gray-950/90 border border-gray-800 text-[10px] font-medium text-gray-300">Checklist</span>
+                        <span class="px-2 py-0.5 rounded-full bg-gray-950/90 border border-gray-800 text-[10px] font-medium text-gray-400">PrismQuant</span>
+                    </div>
+                `;
+                phaseEl.appendChild(metaBar);
+
                 // Tasks List
                 const taskList = document.createElement('div');
-                taskList.className = 'p-2';
+                taskList.className = 'flex-1 p-2 divide-y divide-gray-800/70';
                 
                 phase.tasks.forEach((task) => {
                     const isChecked = state[task.id] === true;
                     
                     const label = document.createElement('label');
-                    label.className = `task-row flex items-start gap-4 p-4 rounded-xl cursor-pointer ${isChecked ? 'is-checked' : ''}`;
+                    label.className = `task-row flex items-start gap-3 px-3 py-3 rounded-xl cursor-pointer ${isChecked ? 'is-checked' : ''}`;
                     
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
@@ -345,12 +364,29 @@
                         saveState();
                     };
 
+                    const textWrapper = document.createElement('div');
+                    textWrapper.className = 'flex flex-col gap-1';
+
                     const textSpan = document.createElement('span');
-                    textSpan.className = 'task-text text-gray-300 font-medium leading-relaxed pt-0.5';
+                    textSpan.className = 'task-text text-gray-300 text-sm font-medium leading-relaxed';
                     textSpan.textContent = task.text;
 
+                    const subMeta = document.createElement('div');
+                    subMeta.className = 'flex items-center gap-2 text-[11px] text-gray-500';
+                    subMeta.innerHTML = `
+                        <span class="inline-flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/80 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+                            <span class="uppercase tracking-[0.18em]">Ready</span>
+                        </span>
+                        <span class="h-3 w-px bg-gray-700/70"></span>
+                        <span class="uppercase tracking-[0.18em] text-gray-600">Detail</span>
+                    `;
+
+                    textWrapper.appendChild(textSpan);
+                    textWrapper.appendChild(subMeta);
+
                     label.appendChild(checkbox);
-                    label.appendChild(textSpan);
+                    label.appendChild(textWrapper);
                     taskList.appendChild(label);
                 });
 
