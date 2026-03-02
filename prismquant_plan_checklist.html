@@ -139,8 +139,11 @@
     <div class="w-full max-w-5xl">
         
         <!-- Header + Hero Section -->
-        <header class="mb-10 mt-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <header class="relative mb-10 mt-6 overflow-hidden">
+            <!-- subtle blended background so image & text share same canvas -->
+            <div class="pointer-events-none absolute -inset-x-24 -top-32 h-64 opacity-70 bg-[radial-gradient(circle_at_0%_0%,rgba(255,0,127,0.18),transparent_60%),radial-gradient(circle_at_100%_0%,rgba(0,212,255,0.16),transparent_55%),radial-gradient(circle_at_50%_100%,rgba(127,0,255,0.18),transparent_60%)]"></div>
+
+            <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-8">
                 <div class="flex-1 text-left">
                     <div class="inline-flex items-center justify-center p-0.5 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 mb-5 shadow-[0_0_20px_rgba(127,0,255,0.3)]">
                         <div class="px-6 py-2 rounded-full bg-[#050505] text-sm font-semibold tracking-widest uppercase text-gray-300">
@@ -156,10 +159,8 @@
                     </p>
                 </div>
 
-                <div class="w-full md:w-auto md:flex-shrink-0">
-                    <div class="glass-panel rounded-2xl overflow-hidden bg-[#050505] px-4 py-4 md:px-5 md:py-5 flex items-center justify-center">
-                        <img src="PrismQ.png" alt="PrismQuant visual" class="w-[160px] md:w-[200px] lg:w-[220px] h-auto object-contain">
-                    </div>
+                <div class="w-full md:w-auto md:flex-shrink-0 flex justify-start md:justify-end">
+                    <img src="PrismQ.png" alt="PrismQuant visual" class="w-[150px] md:w-[190px] lg:w-[210px] h-auto object-contain drop-shadow-[0_0_28px_rgba(127,0,255,0.85)] opacity-95">
                 </div>
             </div>
         </header>
