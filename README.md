@@ -1,76 +1,109 @@
-# 🔮 PrismQuant Master Checklist
+# PrismQuant Master Checklist (v2)
 
-> **On-Premise Crypto Trading Platform based on Mac Mini M4**
-> 프로젝트의 진척도 트래킹 및 로컬 서버 환경 최적화를 위한 전용 **SPA(Single Page Application)** 가이드라인입니다.
-
----
-
-## 🚀 Quick Start
-
-### 💡 How to Use
-- **Zero-Dependency:** 별도의 환경 세팅(Node.js, DB 등) 없이 단일 HTML 파일로 즉시 실행 가능합니다.
-- **Portability:** `prismquant_checklist.html` 파일을 브라우저(Safari, Chrome)로 열기만 하면 끝입니다.
-- **Pro Tip:** 브라우저 북마크 바에 추가하여 **대시보드처럼 상시 활용**하세요.
+> On-Premise Crypto Trading Platform based on Mac Mini M4
+> 서비스 레벨 자동 매매 시스템 구축을 위한 5단계 실행 체크리스트 문서입니다.
 
 ---
 
-## 🛠 Tech Stack & Architecture
+## Quick Start
 
-- **UI/UX:** `Tailwind CSS` (Glassmorphism & Cyberpunk Dark Theme)
-- **Icons:** `Lucide Icons` (Dynamic CDN Loading)
-- **Storage:** `Browser LocalStorage` (별도 DB 없이 로컬 데이터 영구 보존)
-- **Core:** `Vanilla JavaScript` (Event-driven state management)
+### How to Use
+- Zero-Dependency: 별도 런타임 설치 없이 단일 HTML 파일로 실행합니다.
+- Open File: `prismquant_plan_checklist.html` 파일을 브라우저(Safari, Chrome)로 엽니다.
+- Daily Use: 북마크로 등록해 진행률 대시보드처럼 상시 확인합니다.
 
----
-
-## 🗺 Project Roadmap
-
-
-
-### 🛰 Phase 1: Mac Mini 요새화
-- **24/7 Stability:** 잠자기 방지 및 전원 재인가 시 자동 부팅/실행 설정
-- **Virtualization:** `Docker` 기반 컨테이너 환경 구축 및 하드웨어 리소스 할당
-- **Network:** `Cloudflare Tunnel`을 이용한 외부 포트 개방 없는 Zero Trust 연결
-
-### ⚙️ Phase 2: 코어 엔진 및 DB
-- **Security:** MySQL 스키마 설계 및 API Key `AES-256` 암호화 저장
-- **Backend:** `FastAPI` 기반 비동기 트레이딩 아키텍처 구현
-- **Execution:** TradingView 웹훅 수신 및 `ccxt` 기반 트레이딩 엔진 구축
-
-### 🛡 Phase 3: 보안 및 서킷 브레이커
-- **Kill-Switch:** MDD(최대 낙폭) 감지 시 즉시 모든 주문을 중단하는 안전장치
-- **Stability:** 거래소 `Rate Limit` 방어 및 주문 큐잉(Queuing) 시스템
-- **Alert:** Telegram Bot을 통한 크리티컬 시스템 장애 실시간 푸시
-
-### 📊 Phase 4: 실시간 파이프라인
-- **Streaming:** `FastAPI WebSocket`을 통한 초저지연 데이터 전송
-- **Analysis:** `ELK 스택` (Elasticsearch + Kibana) 기반 거래 로그 시각화
-- **Monitoring:** `Prometheus & Grafana` 기반 서버 자원 상태 모니터링
-
-### 🖥 Phase 5: 하이브리드 대시보드
-- **Admin:** `Streamlit` 기반 로컬 전용 전략 파라미터 조작 어드민
-- **User Web:** `React/Next.js` 기반 외부 확인용 대시보드 및 JWT 보안
-
-### 🩹 Phase 6: 재난 복구 (DR)
-- **Chaos Test:** 네트워크 단절 및 시스템 다운 시 `Auto-Recovery` 프로세스 검증
-- **Backup:** `S3/Google Drive` API 연동을 통한 심야 DB 오프사이트 백업
-
-### 🤖 Phase 7: AI 에이전트 결합
-- **Intelligence:** 뉴스 센티먼트 및 온체인 데이터 실시간 분석 에이전트
-- **Self-Correction:** 시장 변동성 감지 시 능동적 리스크 헷징 및 자율 청산
+### Progress State Policy (v2)
+- 체크 상태 저장 키: `prismquant_tasks_v2`
+- 구버전 키(`prismquant_master_state`, `prismquant_tasks`)는 자동 마이그레이션하지 않고 분리 운용합니다.
+- 필요 시 구버전 상태는 콘솔의 `window.__prismquant_legacy_backup`에서 확인 가능합니다.
 
 ---
 
-## 📂 Directory Structure
+## Tech Stack
+
+- UI: `Tailwind CSS`
+- Icon: `Lucide Icons`
+- State: `Browser LocalStorage`
+- Core Script: `Vanilla JavaScript`
+
+---
+
+## Project Roadmap (5 Phases)
+
+### Phase 1: 인프라 및 홈 서버 네트워크 세팅
+- Mac 절전/전원/고정 IP 최적화
+- 포트포워딩(80/443) 및 Cloudflare DNS/SSL(Strict) 구성
+- Docker Desktop 및 `web-network` 기반 기본 Compose 골격 준비
+
+### Phase 2: 데이터베이스 및 메시지 브로커 구축
+- MySQL/PostgreSQL 컨테이너 + 볼륨 마운트
+- `Users`, `API_Keys`, `Trade_Logs` 스키마 및 마이그레이션
+- Redis를 Celery Broker/Result Backend + 캐시로 구성
+
+### Phase 3: 코어 웹 서버 개발 (FastAPI & Nginx)
+- FastAPI 프로젝트 구조(routers/models/schemas/core/services) 정리
+- Nginx 리버스 프록시 및 Cloudflare Origin 인증서 적용
+- Upbit/Binance WebSocket 수신 및 내부 파이프라인 연결
+
+### Phase 4: 비동기 매매 워커 구성 (Celery & 거래소 API)
+- Celery Worker 분리 및 매수/매도 Task 정의
+- 거래소 API Rate Limit 제어(Token Bucket 등) 적용
+- `autoretry_for` + Exponential Backoff 기반 장애 복원력 확보
+
+### Phase 5: 전략 알고리즘 통합 및 로깅/모니터링
+- 전략 모듈 인터페이스화(규칙 기반/ML 확장 대비)
+- Filebeat/Fluentd -> Elasticsearch -> Kibana 로그 파이프라인 구축
+- 실시간 매매/에러/리소스 관제 대시보드 구성
+
+---
+
+## Target Service Topology
+
+```mermaid
+flowchart TD
+  internet[Internet] --> cloudflare[Cloudflare]
+  cloudflare --> nginx[NginxContainer]
+  nginx --> fastapi[FastAPIContainer]
+  fastapi --> redis[RedisContainer]
+  fastapi --> db[MySQLOrPostgreSQLContainer]
+  fastapi --> ws[ExchangeWebSocket]
+  fastapi --> celery[CeleryWorkerContainer]
+  celery --> redis
+  celery --> exchangeApi[ExchangeRestApi]
+
+  subgraph dockerNet [DockerWebNetwork]
+    nginx
+    fastapi
+    redis
+    db
+    celery
+  end
+```
+
+---
+
+## Backlog / Future Scope
+
+<details>
+<summary>중장기 과제 보기</summary>
+
+- Streamlit 운영자 대시보드 고도화
+- B2C 사용자 웹 대시보드(React/Next.js)
+- 백테스팅 고도화(시나리오/리포트 자동화)
+- DR 자동화(정기 백업, 외부 스토리지 전송, 복구 리허설)
+- AI/센티먼트/온체인 신호 결합 전략
+
+</details>
+
+---
+
+## Current Files
 
 ```text
 .
-├── checklist/            # SPA 체크리스트 소스 코드
-├── config/               # Mac Mini 환경 설정 및 Dockerfile
-├── core/                 # FastAPI 기반 트레이딩 코어 엔진
-├── monitoring/           # ELK & Grafana 설정 파일
-└── scripts/              # 백업 및 서킷 브레이커 스크립트
+├── prismquant_plan_checklist.html
+├── README.md
+└── PrismQ.png
+```
 
----
-
-PrismQuant Project | Developed by Calcifer
+PrismQuant Project

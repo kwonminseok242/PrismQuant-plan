@@ -35,6 +35,7 @@
         .text-metallic {
             background: linear-gradient(to bottom, #ffffff 0%, #a0a0a0 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             color: transparent;
             text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
         }
@@ -156,10 +157,12 @@
                             <span class="text-metallic">Prism</span><span class="text-holographic">Quant</span>
                         </h1>
                         <p class="text-gray-400 text-base md:text-lg lg:text-xl font-light tracking-wide">
-                            Mac Mini On-Premise Master Checklist
+                            Service Launch Checklist v2 (5-Phase)
                         </p>
                     </div>
                 </div>
+
+                <div class="mt-6 h-px w-full bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
             </div>
         </header>
 
@@ -189,6 +192,22 @@
             <!-- JavaScript will populate this -->
         </main>
 
+        <!-- Backlog / Future Scope -->
+        <section class="glass-panel rounded-2xl p-6 mb-16">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="p-1.5 rounded-lg bg-gray-800/60 text-gray-300 shadow-inner">
+                    <i data-lucide="archive" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-100 tracking-wide">Backlog / Future Scope</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">현재 5단계 범위 밖의 중장기 과제 보관소</p>
+                </div>
+            </div>
+            <ul id="backlog-list" class="space-y-2 text-sm text-gray-300">
+                <!-- JavaScript will populate this -->
+            </ul>
+        </section>
+
     </div>
 
     <script>
@@ -197,88 +216,79 @@
             {
                 id: 'phase1',
                 icon: 'server',
-                title: 'Phase 1: Mac Mini 온프레미스 요새화',
+                title: 'Phase 1: 인프라 및 홈 서버 네트워크 세팅',
                 tasks: [
-                    { id: 't1-1', text: '시스템 환경설정: 잠자기 방지 및 전원 단절 후 자동 부팅 설정' },
-                    { id: 't1-2', text: 'SSH 원격 접속 개방 및 Homebrew 패키지 매니저 세팅' },
-                    { id: 't1-3', text: 'Docker Desktop / OrbStack 설치 및 리소스 한도 설정 (RAM 16GB)' },
-                    { id: 't1-4', text: 'GitHub Actions Self-Hosted Runner 설치 (CI/CD 자동화)' },
-                    { id: 't1-5', text: 'Cloudflare Tunnel (cloudflared) 데몬 설치 및 DNS Ingress 라우팅' },
-                    { id: 't1-6', text: 'Docker Compose: proxy-tier / backend-tier 네트워크 분리 및 볼륨 마운트' }
+                    { id: 't1-1', text: 'Mac 전원/절전 설정 최적화: 디스플레이 꺼짐 상태에서도 자동 잠자기 방지' },
+                    { id: 't1-2', text: 'Mac Mini 로컬 고정 IP 할당 및 라우터 DHCP 예약 설정' },
+                    { id: 't1-3', text: 'Homebrew 및 필수 패키지(curl, git, openssl 등) 설치' },
+                    { id: 't1-4', text: '공유기 포트포워딩(80/443) -> Mac Mini 고정 IP 매핑' },
+                    { id: 't1-5', text: 'Cloudflare 네임서버 전환 및 A 레코드(프록시 ON) 구성' },
+                    { id: 't1-6', text: 'Cloudflare SSL/TLS Strict + Origin CA 인증서 발급 및 보관' },
+                    { id: 't1-7', text: 'Docker Desktop 자원 할당 및 docker-compose 기본 web-network 정의' }
                 ]
             },
             {
                 id: 'phase2',
                 icon: 'database',
-                title: 'Phase 2: 코어 백엔드 및 DB 구축',
+                title: 'Phase 2: 데이터베이스 및 메시지 브로커 구축',
                 tasks: [
-                    { id: 't2-1', text: 'MySQL 핵심 테이블 (Users, Exchange_Keys, Trade_Logs) 스키마 설계' },
-                    { id: 't2-2', text: 'cryptography 모듈 기반 AES-256 API Key 양방향 암호화 로직 구현' },
-                    { id: 't2-3', text: 'FastAPI 비동기 프로젝트 Layered Architecture 폴더 구조화' },
-                    { id: 't2-4', text: 'TradingView 웹훅 엔드포인트 구현 및 Secret Token 방어 로직 적용' },
-                    { id: 't2-5', text: 'ccxt.async_support 기반 거래소 API 연동 및 비동기 주문 파이프라인 구축' }
+                    { id: 't2-1', text: 'MySQL/PostgreSQL 컨테이너 구성 및 호스트 볼륨 마운트 경로 확정' },
+                    { id: 't2-2', text: 'Users/API_Keys/Trade_Logs 스키마(ERD) 설계 및 마이그레이션 기준 수립' },
+                    { id: 't2-3', text: 'API Secret Key 저장 시 AES-256 양방향 암호화 정책 반영' },
+                    { id: 't2-4', text: 'Redis 컨테이너를 Celery Broker/Result Backend 용도로 구성' },
+                    { id: 't2-5', text: 'Redis maxmemory-policy 설정으로 캐시 및 큐 안정성 확보' }
                 ]
             },
             {
                 id: 'phase3',
-                icon: 'shield-alert',
-                title: 'Phase 3: 철통 보안 및 알림망',
+                icon: 'activity',
+                title: 'Phase 3: 코어 웹 서버 개발 (FastAPI & Nginx)',
                 tasks: [
-                    { id: 't3-1', text: 'MDD(최대 낙폭) 기반 시스템 레벨 서킷 브레이커 감지 로직 구현' },
-                    { id: 't3-2', text: '서킷 브레이커 발동 시 유저 상태 Suspended 전환 및 신규 진입 원천 봉쇄' },
-                    { id: 't3-3', text: '비동기 Task Queue 구축을 통한 거래소 Rate Limit (API 호출 제한) 우회' },
-                    { id: 't3-4', text: '에러 코드 429 수신 시 Exponential Backoff 알고리즘 적용' },
-                    { id: 't3-5', text: 'Python Logger - Telegram Bot API 연동 (Error/Fatal 레벨 긴급 푸시)' }
+                    { id: 't3-1', text: 'FastAPI 디렉토리 구조(routers/models/schemas/core/services) 표준화' },
+                    { id: 't3-2', text: 'SQLAlchemy(또는 SQLModel) 기반 DB 연동 및 핵심 CRUD API 구현' },
+                    { id: 't3-3', text: 'Nginx 리버스 프록시 구성: HTTPS 유입 -> FastAPI:8000 전달' },
+                    { id: 't3-4', text: 'Nginx에 Cloudflare Origin 인증서 마운트 및 SSL 적용' },
+                    { id: 't3-5', text: 'Upbit/Binance WebSocket 구독 클라이언트 구성' },
+                    { id: 't3-6', text: '실시간 틱 데이터 정제 후 클라이언트/전략 엔진으로 전달 파이프라인 구축' }
                 ]
             },
             {
                 id: 'phase4',
-                icon: 'activity',
-                title: 'Phase 4: WebSocket 및 모니터링',
+                icon: 'cpu',
+                title: 'Phase 4: 비동기 매매 워커 구성 (Celery & 거래소 API)',
                 tasks: [
-                    { id: 't4-1', text: 'FastAPI 기반 WebSocket 서버 및 Connection Manager 구현' },
-                    { id: 't4-2', text: 'Elasticsearch + Kibana (ELK) 컨테이너화 및 docker-compose 추가' },
-                    { id: 't4-3', text: 'Filebeat 연동: FastAPI/Nginx 로그 실시간 Elasticsearch 적재' },
-                    { id: 't4-4', text: 'Prometheus + Grafana 컨테이너 추가 및 하드웨어(CPU/RAM) 매트릭스 연결' }
+                    { id: 't4-1', text: 'FastAPI와 코드 공유하는 Celery Worker 컨테이너 분리 구성' },
+                    { id: 't4-2', text: 'buy_coin_task/sell_coin_task 정의 및 ccxt/거래소 REST API 호출 연결' },
+                    { id: 't4-3', text: 'Redis 기반 Token Bucket 등 Rate Limit 제어 로직 적용' },
+                    { id: 't4-4', text: 'Worker Concurrency 튜닝으로 다종목 동시 주문 지연 최소화' },
+                    { id: 't4-5', text: 'Timeout/429 예외에 대해 autoretry + Exponential Backoff 적용' }
                 ]
             },
             {
                 id: 'phase5',
-                icon: 'layout-dashboard',
-                title: 'Phase 5: 투트랙(Two-Track) 대시보드',
+                icon: 'line-chart',
+                title: 'Phase 5: 전략 알고리즘 통합 및 로깅/모니터링',
                 tasks: [
-                    { id: 't5-1', text: '사내 통제용 Streamlit 어드민 (시스템 헬스 체크, 유저 제어 패널) 구축' },
-                    { id: 't5-2', text: 'Streamlit 기반 과거 데이터 승률/MDD 백테스트 시뮬레이터 탭 구현' },
-                    { id: 't5-3', text: 'B2C 유저 웹 대시보드 (React/Next.js) 스캐폴딩 및 디자인' },
-                    { id: 't5-4', text: '대시보드 내 API 키 유효성 즉각 검증 및 JWT 보안 세션 연동' },
-                    { id: 't5-5', text: 'WebSocket 연동을 통한 B2C 대시보드 자산/포지션 실시간 렌더링 최적화' }
-                ]
-            },
-            {
-                id: 'phase6',
-                icon: 'zap',
-                title: 'Phase 6: 샌드박스 및 재난 복구(DR)',
-                tasks: [
-                    { id: 't6-1', text: '거래소 Testnet 기반 대규모 가짜 웹훅 신호 스트레스 테스트 (Rate Limit 검증)' },
-                    { id: 't6-2', text: '카오스 엔지니어링: 물리적 단절(랜선/전원) 후 DB 및 백엔드 Auto-Recovery 검증' },
-                    { id: 't6-3', text: '심야 시간대 MySQL mysqldump 및 .env 설정 파일 압축 Cronjob 스크립트 작성' },
-                    { id: 't6-4', text: '압축된 백업본 AWS S3 또는 Google Drive API 외부 스토리지 자동 전송 파이프라인' }
-                ]
-            },
-            {
-                id: 'phase7',
-                icon: 'brain-circuit',
-                title: 'Phase 7: AI 자율 매매 결합',
-                tasks: [
-                    { id: 't7-1', text: 'X(트위터) 센티먼트 및 온체인 고래 이동 데이터 실시간 크롤링 에이전트 띄우기' },
-                    { id: 't7-2', text: '수집 데이터 기반 시장 상황 판단 (Normal / Warning / Black Swan) 로직 구현' },
-                    { id: 't7-3', text: '블랙 스완 감지 시 레버리지 자동 조절 및 포지션 자율 청산 스마트 스위치 연동' }
+                    { id: 't5-1', text: '실시간 호가/체결 데이터 기반 매매 타이밍 결정 로직 통합' },
+                    { id: 't5-2', text: '전략 모듈 인터페이스화로 규칙 기반/ML 모델 교체 가능 구조 설계' },
+                    { id: 't5-3', text: 'Filebeat/Fluentd 중 1개를 선택해 Nginx/FastAPI/Celery 로그 수집' },
+                    { id: 't5-4', text: 'Elasticsearch 적재 및 Kibana 대시보드(매매/에러/리소스) 구성' },
+                    { id: 't5-5', text: '운영 관점 알림 및 장애 징후 모니터링 규칙 정의' }
                 ]
             }
         ];
 
+        const backlogItems = [
+            'Streamlit 기반 운영자(Admin) 대시보드 고도화',
+            'B2C 사용자용 React/Next.js 대시보드 구축',
+            '백테스팅 고도화(승률/MDD/시나리오별 리포트)',
+            'DR 자동화(정기 백업, 외부 스토리지 전송, 복구 리허설)',
+            'AI/센티먼트/온체인 신호 결합 전략 실험'
+        ];
+
         // --- State Management ---
-        const STORAGE_KEY = 'prismquant_master_state';
+        const STORAGE_KEY = 'prismquant_tasks_v2';
+        const LEGACY_KEYS = ['prismquant_master_state', 'prismquant_tasks'];
         let state = {};
 
         function loadState() {
@@ -286,6 +296,19 @@
             if (saved) {
                 try { state = JSON.parse(saved); } 
                 catch (e) { state = {}; }
+                return;
+            }
+
+            for (const key of LEGACY_KEYS) {
+                const legacy = localStorage.getItem(key);
+                if (!legacy) continue;
+                try {
+                    window.__prismquant_legacy_backup = JSON.parse(legacy);
+                    console.info('[PrismQuant] Legacy state detected and backed up to window.__prismquant_legacy_backup. Starting clean v2 checklist.');
+                } catch (e) {
+                    console.info('[PrismQuant] Legacy state detected but failed to parse. Starting clean v2 checklist.');
+                }
+                break;
             }
         }
 
@@ -401,6 +424,21 @@
             updateProgress();
         }
 
+        function renderBacklog() {
+            const backlogList = document.getElementById('backlog-list');
+            backlogList.innerHTML = '';
+
+            backlogItems.forEach((item) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-2';
+                li.innerHTML = `
+                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400/90 shadow-[0_0_8px_rgba(251,191,36,0.6)]"></span>
+                    <span class="leading-relaxed">${item}</span>
+                `;
+                backlogList.appendChild(li);
+            });
+        }
+
         function updateProgress() {
             let totalTasks = 0;
             let completedTasks = 0;
@@ -436,6 +474,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadState();
             renderChecklist();
+            renderBacklog();
         });
 
     </script>
